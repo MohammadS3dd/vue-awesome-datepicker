@@ -1,7 +1,7 @@
 
 <template>
   <div id="app">
-    <vue-awesome-datepicker v-model="date" />
+    <vue-awesome-datepicker lang="Jalali" v-model="date" />
     {{date}}
   </div>
 </template>
