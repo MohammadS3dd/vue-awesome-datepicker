@@ -46,7 +46,7 @@ export default {
 # Contribution
 ## TODO 
 
-- [ ] decouple styles from tailwind CSS
+- [X] decouple styles from tailwind CSS
 - [ ] refactor to composition api
 - [ ] add customizability
 - [ ] documentaition
