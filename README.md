@@ -14,7 +14,8 @@ awesome, zero dependency, performant Vue datepicker component
 ## TODO 
 
 - [ ] decouple styles from tailwind CSS
-- [x] refactor to composition api
+- [ ] refactor to composition api
+- [ ] add customizability
 - [ ] documentaition
 
 ## Installation 🚀
