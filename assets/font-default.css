@@ -1,0 +1,21 @@
+@font-face {
+    font-family: Vazir;
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v28.0.0/dist/Vazir-Light.eot');
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v28.0.0/dist/Vazir-Light.eot?#iefix') format('embedded-opentype'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v28.0.0/dist/Vazir-Light.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v28.0.0/dist/Vazir-Light.woff') format('woff'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v28.0.0/dist/Vazir-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-display:swap;
+  }
+  
+  @font-face {
+    font-family: Vazir;
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v28.0.0/dist/Vazir-Medium.eot');
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v28.0.0/dist/Vazir-Medium.eot?#iefix') format('embedded-opentype'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v28.0.0/dist/Vazir-Medium.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v28.0.0/dist/Vazir-Medium.woff') format('woff'),
+         url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v28.0.0/dist/Vazir-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-display:swap;
+  }
