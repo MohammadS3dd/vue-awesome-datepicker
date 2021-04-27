@@ -30,12 +30,13 @@ export default {
     datepicker,
   },
   data() {
-    return { date: {} };
+    return { date: {},dateGreg:{} };
   },
 };
 
 <template>
   <datepicker lang="Jalali" type="range" v-model="date" />
+  <datepicker lang="Greg" type="range" v-model="dateGreg" />
 </template>
 
 ```
