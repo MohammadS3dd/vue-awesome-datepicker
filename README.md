@@ -1,9 +1,11 @@
 
 <center>
-<a href="https://github.com/MohammadS3dd/vue-awesome-datepicker">
+<a align="center" href="https://github.com/MohammadS3dd/vue-awesome-datepicker">
 	<img src="https://raw.githubusercontent.com/MohammadS3dd/vue-awesome-datepicker/master/docs/dp-prev-j.PNG"  />
 </a>
 </center>
+
+
 # Vue Awesome Datepicker 
 
 
@@ -12,7 +14,7 @@ awesome, zero dependency, performant Vue datepicker component
 ## TODO 
 
 - [ ] decouple styles from tailwind CSS
-- [ ] refactor to composition api
+- [x] refactor to composition api
 - [ ] documentaition
 
 ## Installation 🚀
