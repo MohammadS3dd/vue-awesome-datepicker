@@ -66,7 +66,7 @@
           </svg>
         </button>
       </div>
-      <div class="calender" :class="{ rtl: locale === 'Jalali' }">
+      <div class="calander" :class="{ rtl: locale === 'Jalali' }">
         <div class="inrow dp-py-2 dp-border-b dp-border-dashed">
           <div
             v-for="day in Settings[locale].WD"
@@ -800,11 +800,7 @@ export default defineComponent({
       
       const now = new Date()
       const nowJalali = this.toolkit.getJalali(now)
-      console.log(now , now.getFullYear() === this.thisMonth.current.year ,
-        now.getMonth() +1 === this.thisMonth.current.monthSTD ,
-        now.getDate() === day
-      );
-
+     
       return (
        ( nowJalali.year === this.thisMonth.current.year &&
         nowJalali.month === this.thisMonth.current.monthSTD &&
@@ -1112,7 +1108,7 @@ video {
   position: relative;
   width: 100%;
 }
-.calender {
+.calendar {
   direction: ltr;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
