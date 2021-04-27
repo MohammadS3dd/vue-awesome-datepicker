@@ -17,7 +17,7 @@ yarn add vue-awesome-datepicker
 ```
 
 
-### Component Registration and usage
+## Component Registration and usage
 
 ```javascript
 
