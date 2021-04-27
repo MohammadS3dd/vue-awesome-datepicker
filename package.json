@@ -2,6 +2,10 @@
   "name": "vue-awesome-datepicker",
   "version": "1.0.3",
   "description": "awesome, zero dependency, performant Vue datepicker component",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MohammadS3dd/vue-awesome-datepicker.git"
+  },
   "main": "dist/vue-awesome-datepicker.ssr.js",
   "browser": "dist/vue-awesome-datepicker.esm.js",
   "module": "dist/vue-awesome-datepicker.esm.js",
