@@ -1,6 +1,6 @@
 {
   "name": "vue-awesome-datepicker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "awesome, zero dependency, performant Vue datepicker component",
   "main": "dist/vue-awesome-datepicker.ssr.js",
   "browser": "dist/vue-awesome-datepicker.esm.js",
