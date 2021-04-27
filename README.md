@@ -11,12 +11,6 @@
 
 awesome, zero dependency, performant Vue datepicker component
 
-## TODO 
-
-- [ ] decouple styles from tailwind CSS
-- [ ] refactor to composition api
-- [ ] add customizability
-- [ ] documentaition
 
 ## Installation 🚀
 ```bash
@@ -49,3 +43,10 @@ export default {
 </template>
 
 ```
+# Contribution
+## TODO 
+
+- [ ] decouple styles from tailwind CSS
+- [ ] refactor to composition api
+- [ ] add customizability
+- [ ] documentaition
