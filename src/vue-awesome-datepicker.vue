@@ -161,7 +161,7 @@
           </transition>
         </div>
 
-        <div class="flex flex-wrap dp-mt-3 dp-mx-3">
+        <div class="flex flex-wrap dp-my-3 dp-mx-3">
           <button
             class="dp-bg-green-400 dp-text-white dp-p-2 dp-rounded-xl dp-font-bold dp-text-sm dp-mx-1 outline-none dp-focus:outline-none"
             @click="gotoToday"
@@ -1559,8 +1559,9 @@ button {
   margin-right: 0.75rem;
 }
 
-.dp-mt-3 {
+.dp-my-3 {
   margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
 .dp-focus\:outline-none:focus,
