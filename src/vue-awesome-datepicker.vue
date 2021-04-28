@@ -10,7 +10,7 @@
           class="dp-bg-white dp-rounded-md dp-text-white dp-w-6 dp-h-6 justify-center flex dp-focus:outline-none"
           :v-show="isBackwardLimit()"
           :disabled="!isBackwardLimit()"
-          :class="[!isBackwardLimit() ? 'dp-bg-gray-400' : 'dp-bg-yellow-400']"
+          :class="[!isBackwardLimit() ? 'dp-bg-gray-400' : theme.Bg400]"
           @click="PrevMonth"
         >
           <svg
@@ -49,7 +49,7 @@
           class="dp-bg-white dp-rounded-md dp-text-white dp-w-6 dp-h-6 justify-center flex dp-focus:outline-none"
           :v-show="isForwardLimit()"
           :disabled="!isForwardLimit()"
-          :class="[!isForwardLimit() ? 'dp-bg-gray-400' : 'dp-bg-yellow-400']"
+          :class="[!isForwardLimit() ? 'dp-bg-gray-400' : theme.Bg400 ]"
           @click="NextMonth"
         >
           <svg
@@ -71,7 +71,7 @@
           <div
             v-for="day in Settings[locale].WD"
             :key="day"
-            class="dp-text-yellow-500 days dp-text-base dp-font-medium"
+            :class="'days dp-text-base dp-font-medium ' + theme.Text500 "
           >
             {{ day }}
           </div>
@@ -100,7 +100,7 @@
                   isHoliday(day) ? 'dp-text-red-400' : '',
                   isDisabled(day) || !isSelectable(day)
                     ? 'dp-text-gray-300'
-                    : 'dp-text-gray-900 days-curr',
+                    : 'dp-text-gray-900 ' + theme.DCHover,
                 ]"
                 style=""
                 :disabled="isDisabled(day) || !isSelectable(day)"
@@ -113,25 +113,25 @@
                   :class="[
                     isSelected(day) &&
                     !(isInrange(day).isFirstDay || isInrange(day).isLastDay)
-                      ? 'dp-bg-yellow-400 dp-text-white day-selected  '
+                      ? 'dp-text-white day-selected  ' + theme.Bg400
                       : '',
                     isInrange(day).value
-                      ? 'dp-bg-yellow-400 dp-w-full dp-text-white not-round'
+                      ? 'dp-w-full dp-text-white not-round' + theme.Bg400
                       : '',
                     isInrange(day).isFirstDay && locale === 'Jalali'
-                      ? 'dp-bg-yellow-400 rounded-r-force dp-w-full dp-text-white'
+                      ? 'rounded-r-force dp-w-full dp-text-white' + theme.Bg400
                       : '',
                     isInrange(day).isLastDay && locale === 'Jalali'
-                      ? 'dp-bg-yellow-400 rounded-l-force dp-w-full dp-text-white'
+                      ? 'rounded-l-force dp-w-full dp-text-white' + theme.Bg400
                       : '',
                     isInrange(day).isFirstDay && locale === 'Greg'
-                      ? 'dp-bg-yellow-400 rounded-l-force dp-w-full dp-text-white'
+                      ? 'rounded-l-force dp-w-full dp-text-white' + theme.Bg400
                       : '',
                     isInrange(day).isLastDay && locale === 'Greg'
-                      ? 'dp-bg-yellow-400 rounded-r-force dp-w-full dp-text-white'
+                      ? 'rounded-r-force dp-w-full dp-text-white' + theme.Bg400
                       : '',
                     isToday(day) && !isSelected(day)
-                      ? 'ring-yellow-400 ring-2'
+                      ? 'ring-2 ' + theme.Ring400
                       : '',
                   ]"
                 >
@@ -184,12 +184,13 @@
 
 <script>
 import { defineComponent } from 'vue'
+import toolkit from './toolkit.js'
 export default defineComponent({
   props: {
     date: { type: Object },
     lang: { type: String },
     type: { type: String },
-
+    colorTheme:{type:String},
     preSelectedModel: { type: Object },
     holidayMap: { type: Object },
     disabledMap: { type: Object },
@@ -203,159 +204,11 @@ export default defineComponent({
       ctx.emit('datemodel', t)
       ctx.emit('update:modelValue', t)
     }
-    return { dmHandle }
+    return { dmHandle ,toolkit }
   },
   data () {
     return {
-      toolkit: {
-        isLeapYear (year) {
-          const ary =
-            year > 1342
-              ? [1, 5, 9, 13, 17, 22, 26, 30]
-              : [1, 5, 9, 13, 17, 21, 26, 30]
-          const _b = year % 33
-          return ary.includes(_b)
-        },
-        getLastDayOfMonth ({ year, month }) {
-          const y = year
-          const m = month
-          if (m >= 1 && m <= 6) {
-            return 31
-          } else if (m >= 7 && m < 12) {
-            return 30
-          } else if (this.isLeapYear(y)) {
-            /* Leap year */
-            return 30
-          } else {
-            return 29
-          }
-        },
-        getGregorian (pd) {
-          let jy = pd.year
-          const jm = pd.month
-          const jd = pd.date
-          let gy
-          if (jy > 979) {
-            gy = 1600
-            jy -= 979
-          } else {
-            gy = 621
-          }
-          let days =
-            365 * jy +
-            parseInt(jy / 33) * 8 +
-            parseInt(((jy % 33) + 3) / 4) +
-            78 +
-            jd +
-            (jm < 7 ? (jm - 1) * 31 : (jm - 7) * 30 + 186)
-          gy += 400 * parseInt(days / 146097)
-          days %= 146097
-          if (days > 36524) {
-            gy += 100 * parseInt(--days / 36524)
-            days %= 36524
-            if (days >= 365) days++
-          }
-          gy += 4 * parseInt(days / 1461)
-          days %= 1461
-          if (days > 365) {
-            gy += parseInt((days - 1) / 365)
-            days = (days - 1) % 365
-          }
-          let gd = days + 1
-          const sala = [
-            0,
-            31,
-            (gy % 4 === 0 && gy % 100 !== 0) || gy % 400 === 0 ? 29 : 28,
-            31,
-            30,
-            31,
-            30,
-            31,
-            31,
-            30,
-            31,
-            30,
-            31
-          ]
-          let gm
-          for (gm = 0; gm < 13; gm++) {
-            const v = sala[gm]
-            if (gd <= v) break
-            gd -= v
-          }
-          const pdt = new Date(gy, gm - 1, gd, 1, 0, 0, 0)
-          const gds = [1, 2, 3, 4, 5, 6, 0]
-          return { gregorian: pdt, weekday: gds[pdt.getDay()] }
-        },
-        getJalali (dt) {
-          let gy = dt.getFullYear()
-          const gm = dt.getMonth() + 1
-          const gd = dt.getDate()
-          let jy
-          const gdm = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
-          if (gy > 1600) {
-            jy = 979
-            gy -= 1600
-          } else {
-            jy = 0
-            gy -= 621
-          }
-          const gy2 = gm > 2 ? gy + 1 : gy
-          let days =
-            365 * gy +
-            parseInt((gy2 + 3) / 4) -
-            parseInt((gy2 + 99) / 100) +
-            parseInt((gy2 + 399) / 400) -
-            80 +
-            gd +
-            gdm[gm - 1]
-          jy += 33 * parseInt(days / 12053)
-          days %= 12053
-          jy += 4 * parseInt(days / 1461)
-          days %= 1461
-          if (days > 365) {
-            jy += parseInt((days - 1) / 365)
-            days = (days - 1) % 365
-          }
-          const jm =
-            days < 186
-              ? 1 + parseInt(days / 31)
-              : 7 + parseInt((days - 186) / 30)
-          const jd = 1 + (days < 186 ? days % 31 : (days - 186) % 30)
-          dt = new Date()
-          const pd = {}
-          pd.year = jy
-          pd.month = jm
-          pd.date = jd
-          pd.gDate = dt
-          return pd
-        },
-        now () {
-          return this.getJalali(new Date())
-        },
-        nextMonth ({ year, month }) {
-          const m = (month % 12) + 1
-          const y = parseInt(month / 12) + year
-          return { year: y, month: m }
-        },
-        prevMonth ({ year, month }) {
-          const m = ((12 + ((month - 2) % 12)) % 12) + 1
-          const y = year + (month === 1 ? -1 : 0)
-          return { year: y, month: m }
-        },
-        getMeta (now) {
-          now.date = 1
-          const nextm = this.nextMonth({ year: now.year, month: now.month })
-          nextm.date = 1
-          const ng = this.getGregorian(nextm)
-          const g = this.getGregorian(now)
-          const prevLWD = (g.weekday + 6) % 7
-          const currLWD = (ng.weekday + 6) % 7
-          const currLD = this.getLastDayOfMonth(now)
-          const prevLD = this.getLastDayOfMonth(this.prevMonth(now))
-          return { currLD, prevLWD, prevLD, currLWD }
-        }
-      },
+      toolkit:{},
       inpday: null,
       Settings: {
         Jalali: {
@@ -401,6 +254,34 @@ export default defineComponent({
     }
   },
   computed: {
+
+    theme(){
+
+      const defaultTheme = {
+        Bg400:"dp-bg-yellow-400",
+        Text500:"dp-text-yellow-500",
+        Ring400:"dp-ring-yellow-400",
+        DCHover:"days-curr-yellow",
+        }
+      
+      let theme = defaultTheme
+
+      if (this.colorTheme === 'yellow' || this.colorTheme === "Yellow"){
+        theme = defaultTheme
+      }
+
+      if(this.colorTheme === 'pink' || this.colorTheme === "Pink"){
+        theme =  {
+        Bg400:"dp-bg-pink-400",
+        Text500:"dp-text-pink-500",
+        Ring400:"dp-ring-pink-400",
+        DCHover:"days-curr-pink",
+        }
+
+      
+      }
+      return theme
+    },
     now () {
       if (this.locale === 'Jalali') {
         return this.toolkit.now()
@@ -1203,11 +1084,18 @@ video {
 .days:focus {
   outline: none;
 }
-.days-curr:hover span {
+.days-curr-yellow:hover span {
   --ttw-bg-opacity: 1;
   background-color: rgba(252, 211, 77, var(--ttw-bg-opacity));
 }
-.days-curr:focus {
+.days-curr-yellow:focus {
+  outline: none;
+}
+.days-curr-pink:hover span {
+    --ttw-bg-opacity: 1;
+    background-color: rgba(249,168,212,var(--ttw-bg-opacity));
+}
+.days-curr-pink:focus {
   outline: none;
 }
 
@@ -1343,6 +1231,11 @@ button {
   --ttw-text-opacity: 1;
   color: rgba(245, 158, 11, var(--ttw-text-opacity));
 }
+ .dp-text-pink-500 {
+                --ttw-text-opacity: 1;
+                color: rgba(236,72,153,var(--ttw-text-opacity))
+            }
+
 .dp-text-red-400 {
   --ttw-text-opacity: 1;
   color: rgba(248, 113, 113, var(--ttw-text-opacity));
@@ -1386,7 +1279,10 @@ button {
   --ttw-bg-opacity: 1;
   background-color: rgba(251, 191, 36, var(--ttw-bg-opacity));
 }
-
+     .dp-bg-pink-400 {
+                --ttw-bg-opacity: 1;
+                background-color: rgba(244,114,182,var(--ttw-bg-opacity))
+            }
 .dp-bg-green-400 {
   --ttw-bg-opacity: 1;
   background-color: rgba(52, 211, 153, var(--ttw-bg-opacity));
@@ -1405,10 +1301,14 @@ button {
     box-shadow: var(--ttw-ring-offset-shadow),var(--ttw-ring-shadow),0 0 transparent;
     box-shadow: var(--ttw-ring-offset-shadow),var(--ttw-ring-shadow),var(--ttw-shadow,0 0 transparent);
 }
-.ring-yellow-400 {
+.dp-ring-yellow-400 {
     --ttw-ring-opacity: 1;
     --ttw-ring-color: rgba(251,191,36,var(--ttw-ring-opacity));
 }
+ .dp-ring-pink-400 {
+                --ttw-ring-opacity: 1;
+                --ttw-ring-color: rgba(244,114,182,var(--ttw-ring-opacity))
+            }
 .flex {
   display: flex;
 }

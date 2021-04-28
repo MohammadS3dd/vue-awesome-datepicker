@@ -2,10 +2,10 @@
 <template>
   <div id="app">
     <div class="mx-4">
-      <vue-awesome-datepicker lang="Jalali" type="multiple" v-model="date" />
+      <vue-awesome-datepicker lang="Greg" type="multiple" colorTheme="pink" v-model="date" />
     </div>
     <div class="mx-4">
-      <vue-awesome-datepicker lang="Greg" type="multiple" v-model="date" />
+      <vue-awesome-datepicker lang="Jalali" type="multiple" colorTheme="yellow" v-model="date" />
     </div>
     <!-- {{date}} -->
   </div>

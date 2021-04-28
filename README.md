@@ -38,8 +38,8 @@ export default {
 };
 
 <template>
-  <datepicker lang="Jalali" type="range" v-model="date" />
-  <datepicker lang="Greg" type="range" v-model="dateGreg" />
+  <datepicker lang="Jalali" type="multiple" colorTheme="pink" v-model="date" />
+  <datepicker lang="Greg" type="range" type="multiple" colorTheme="yellow" v-model="dateGreg" />
 </template>
 
 ```
