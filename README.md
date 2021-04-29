@@ -12,6 +12,8 @@
 awesome, zero dependency, performant Vue datepicker component
 
 
+<br><a href="https://mohammads3dd.github.io/vue-awesome-datepicker/"><b>Demo</b></a>
+
 ## Installation 🚀
 ```bash
 npm i vue-awesome-datepicker
