@@ -49,7 +49,7 @@
           class="dp-bg-white dp-rounded-md dp-text-white dp-w-6 dp-h-6 justify-center flex dp-focus:outline-none"
           :v-show="isForwardLimit()"
           :disabled="!isForwardLimit()"
-          :class="[!isForwardLimit() ? 'dp-bg-gray-400' : theme.Bg400 ]"
+          :class="[!isForwardLimit() ? 'dp-bg-gray-400' : theme.Bg400]"
           @click="NextMonth"
         >
           <svg
@@ -71,7 +71,7 @@
           <div
             v-for="day in Settings[locale].WD"
             :key="day"
-            :class="'days dp-text-base dp-font-medium ' + theme.Text500 "
+            :class="'days dp-text-base dp-font-medium ' + theme.Text500"
           >
             {{ day }}
           </div>
@@ -116,19 +116,19 @@
                       ? 'dp-text-white day-selected  ' + theme.Bg400
                       : '',
                     isInrange(day).value
-                      ? 'dp-w-full dp-text-white not-round' + theme.Bg400
+                      ? 'dp-w-full dp-text-white not-round ' + theme.Bg400
                       : '',
                     isInrange(day).isFirstDay && locale === 'Jalali'
-                      ? 'rounded-r-force dp-w-full dp-text-white' + theme.Bg400
+                      ? 'rounded-r-force dp-w-full dp-text-white ' + theme.Bg400
                       : '',
                     isInrange(day).isLastDay && locale === 'Jalali'
-                      ? 'rounded-l-force dp-w-full dp-text-white' + theme.Bg400
+                      ? 'rounded-l-force dp-w-full dp-text-white ' + theme.Bg400
                       : '',
                     isInrange(day).isFirstDay && locale === 'Greg'
-                      ? 'rounded-l-force dp-w-full dp-text-white' + theme.Bg400
+                      ? 'rounded-l-force dp-w-full dp-text-white ' + theme.Bg400
                       : '',
                     isInrange(day).isLastDay && locale === 'Greg'
-                      ? 'rounded-r-force dp-w-full dp-text-white' + theme.Bg400
+                      ? 'rounded-r-force dp-w-full dp-text-white ' + theme.Bg400
                       : '',
                     isToday(day) && !isSelected(day)
                       ? 'ring-2 ' + theme.Ring400
@@ -178,62 +178,103 @@
         </div>
       </div>
     </div>
-
+    <div
+      class="flex w-full dp-rounded dp-my-3 dp-bg-white dp-p-3 flex justify-around"
+      v-if="debugSelector"
+    >
+      <label>
+        <input
+          id="single"
+          v-model="inputType"
+          class="m-2"
+          type="radio"
+          :name="'selectortype' + lang"
+          value="single"
+          @change="handleInputtypeChange"
+        />
+        single
+      </label>
+      <label>
+        <input
+          id="multiple"
+          v-model="inputType"
+          class="m-2"
+          type="radio"
+          :name="'selectortype' + lang"
+          value="multiple"
+          @change="handleInputtypeChange"
+        />
+        multiple
+      </label>
+      <label>
+        <input
+          id="range"
+          v-model="inputType"
+          class="m-2"
+          type="radio"
+          :name="'selectortype' + lang"
+          value="range"
+          @change="handleInputtypeChange"
+        />
+        range
+      </label>
+    </div>
   </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
-import toolkit from './toolkit.js'
+import { defineComponent } from "vue";
+import toolkit from "./toolkit.js";
 export default defineComponent({
   props: {
     date: { type: Object },
     lang: { type: String },
     type: { type: String },
-    colorTheme:{type:String},
+    debugSelector: { type: Boolean ,default:false },
+    colorTheme: { type: String },
     preSelectedModel: { type: Object },
     holidayMap: { type: Object },
     disabledMap: { type: Object },
     events: { type: Array },
     forwardLimit: { type: Object },
     backwardLimit: { type: Object },
-    selectable: { type: Object }
+    selectable: { type: Object },
   },
-  setup (props, ctx) {
+  setup(props, ctx) {
     const dmHandle = (t) => {
-      ctx.emit('datemodel', t)
-      ctx.emit('update:modelValue', t)
-    }
-    return { dmHandle ,toolkit }
+      ctx.emit("datemodel", t);
+      ctx.emit("update:modelValue", t);
+    };
+    return { dmHandle, toolkit };
   },
-  data () {
+  data() {
     return {
-      toolkit:{},
+      toolkit: {},
       inpday: null,
       Settings: {
         Jalali: {
           monthNames: [
-            'فروردین',
-            'اردیبهشت',
-            'خرداد',
-            'تیر',
-            'مرداد',
-            'شهریور',
-            'مهر',
-            'آبان',
-            'آذر',
-            'دی',
-            'بهمن',
-            'اسفند'
+            "فروردین",
+            "اردیبهشت",
+            "خرداد",
+            "تیر",
+            "مرداد",
+            "شهریور",
+            "مهر",
+            "آبان",
+            "آذر",
+            "دی",
+            "بهمن",
+            "اسفند",
           ],
-          WD: ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'],
+          WD: ["ش", "ی", "د", "س", "چ", "پ", "ج"],
           setup: [0, 1, 2, 3, 4, 5, 6],
-          persianNumeric: ['٠', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']
+          persianNumeric: ["٠", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"],
         },
         Greg: {
-          WD: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-          setup: [0, 1, 2, 3, 4, 5, 6]
-        }
+          WD: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+          setup: [0, 1, 2, 3, 4, 5, 6],
+        },
       },
 
       prevMap: [1, 2, 3, 4, 5, 6, 0],
@@ -246,69 +287,64 @@ export default defineComponent({
       selectedDateMap: {},
       eventsMap: {},
       isSelectableMap: {},
-      animationIn: '',
-      animationDirection: '',
+      animationIn: "",
+      animationDirection: "",
       changeKey: 0.1,
-      dateselected: {}
-
-    }
+      dateselected: {},
+    };
   },
   computed: {
-
-    theme(){
-
+    theme() {
       const defaultTheme = {
-        Bg400:"dp-bg-yellow-400",
-        Text500:"dp-text-yellow-500",
-        Ring400:"dp-ring-yellow-400",
-        DCHover:"days-curr-yellow",
-        }
-      
-      let theme = defaultTheme
+        Bg400: "dp-bg-yellow-400",
+        Text500: "dp-text-yellow-500",
+        Ring400: "dp-ring-yellow-400",
+        DCHover: "days-curr-yellow",
+      };
 
-      if (this.colorTheme === 'yellow' || this.colorTheme === "Yellow"){
-        theme = defaultTheme
+      let theme = defaultTheme;
+
+      if (this.colorTheme === "yellow" || this.colorTheme === "Yellow") {
+        theme = defaultTheme;
       }
 
-      if(this.colorTheme === 'pink' || this.colorTheme === "Pink"){
-        theme =  {
-        Bg400:"dp-bg-pink-400",
-        Text500:"dp-text-pink-500",
-        Ring400:"dp-ring-pink-400",
-        DCHover:"days-curr-pink",
-        }
-
-      
+      if (this.colorTheme === "pink" || this.colorTheme === "Pink") {
+        theme = {
+          Bg400: "dp-bg-pink-400",
+          Text500: "dp-text-pink-500",
+          Ring400: "dp-ring-pink-400",
+          DCHover: "days-curr-pink",
+        };
       }
-      return theme
+      return theme;
     },
-    now () {
-      if (this.locale === 'Jalali') {
-        return this.toolkit.now()
+    now() {
+      if (this.locale === "Jalali") {
+        return this.toolkit.now();
       } else {
-        const now = new Date()
+        const now = new Date();
         return {
           year: now.getFullYear(),
           month: now.getMonth(),
-          date: now.getDate()
-        }
+          date: now.getDate(),
+        };
       }
     },
 
-    prevCounter () {
+    prevCounter() {
       return this.prevMap[
         (7 + (this.thisMonth.prev.LWDM - this.thisMonth.settings[0])) % 7
-      ]
+      ];
     },
-    nextCounter () {
+    nextCounter() {
       return this.nextMap[
         (7 + (this.thisMonth.current.LWDM - this.thisMonth.settings[0])) % 7
-      ]
+      ];
     },
-    thisMonth () {
-      let today, curr, prev, cal
-      if (this.locale === 'Jalali') {
-        const meta = this.toolkit.getMeta(this.month)
+    thisMonth() {
+      let today, curr, prev, cal;
+      if (this.locale === "Jalali") {
+        const meta = this.toolkit.getMeta(this.month);
         cal = {
           prev: { LD: meta.prevLD, LWDM: meta.prevLWD },
           current: {
@@ -317,14 +353,14 @@ export default defineComponent({
             LD: meta.currLD,
             LWDM: meta.currLWD,
             year: this.month.year,
-            monthName: this.Settings.Jalali.monthNames[this.month.month - 1]
+            monthName: this.Settings.Jalali.monthNames[this.month.month - 1],
           },
-          settings: this.Settings[this.locale].setup
-        }
+          settings: this.Settings[this.locale].setup,
+        };
       } else {
-        today = this.month
-        curr = new Date(today.year, today.month + 1, 0)
-        prev = new Date(today.year, today.month, 0)
+        today = this.month;
+        curr = new Date(today.year, today.month + 1, 0);
+        prev = new Date(today.year, today.month, 0);
         cal = {
           prev: { LD: prev.getDate(), LWDM: prev.getDay() },
           current: {
@@ -333,73 +369,73 @@ export default defineComponent({
             LD: curr.getDate(),
             LWDM: curr.getDay(),
             year: curr.getFullYear(),
-            monthName: curr.toLocaleString('default', { month: 'long' })
+            monthName: curr.toLocaleString("default", { month: "long" }),
           },
-          settings: this.Settings[this.locale].setup
-        }
+          settings: this.Settings[this.locale].setup,
+        };
       }
 
-      return cal
+      return cal;
     },
-    locale () {
-      return this.lang === 'Jalali' ? 'Jalali' : 'Greg'
-    }
+    locale() {
+      return this.lang === "Jalali" ? "Jalali" : "Greg";
+    },
   },
   watch: {
     // inputType() {
     //   this.dateModel = { type: this.inputType, dates: [] }
     //   this.calcSelected()
     // },
-    dateModel () {
-      this.dmHandle(this.dateModel)
+    dateModel() {
+      this.dmHandle(this.dateModel);
 
       // this.$emit('datemodel', this.dateModel)
     },
-    dateselected () {
-      this.handleDateSelected(this.dateselected)
+    dateselected() {
+      this.handleDateSelected(this.dateselected);
     },
-    month () {
-      this.changeKey = Math.random()
-    }
+    month() {
+      this.changeKey = Math.random();
+    },
   },
-  created () {
-    this.month = this.now
+  created() {
+    this.month = this.now;
   },
-  mounted () {
-    this.month = this.now
+  mounted() {
+    this.month = this.now;
     // this.$on('dateselected', this.handleDateSelected)
-    this.inputType =  this.preSelectedModel?.type || this.type || "single"
+    this.inputType = this.preSelectedModel?.type || this.type || "single";
 
-    this.dateModel = this.preSelectedModel || {}
+    this.dateModel = this.preSelectedModel || {};
 
-    this.calcSelected()
-    this.calcMapEvents()
-    this.calcMapSelectable()
+    this.calcSelected();
+    this.calcMapEvents();
+    this.calcMapSelectable();
   },
   methods: {
-    dPickHandle (event) {
-      this.inpday = parseInt(event.target.textContent)
+    dPickHandle(event) {
+      this.inpday = parseInt(event.target.textContent);
     },
-    NextMonth () {
+    NextMonth() {
       this.animationDirection =
-        this.locale === 'Jalali' ? 'direction-prev' : 'direction-next'
+        this.locale === "Jalali" ? "direction-prev" : "direction-next";
 
-      this.month = this.toolkit.nextMonth(this.month)
+      this.month = this.toolkit.nextMonth(this.month);
     },
-    PrevMonth () {
+    PrevMonth() {
       this.animationDirection =
-        this.locale === 'Jalali' ? 'direction-next' : 'direction-prev'
-      this.month = this.toolkit.prevMonth(this.month)
+        this.locale === "Jalali" ? "direction-next" : "direction-prev";
+      this.month = this.toolkit.prevMonth(this.month);
     },
-    normalizeDate (dateObj) {
+    normalizeDate(dateObj) {
       return {
         year: Number.parseInt(dateObj?.year),
         month: Number.parseInt(dateObj?.month),
-        date: Number.parseInt(dateObj?.date)
-      }
+        date: Number.parseInt(dateObj?.date),
+      };
     },
-    handleDateSelected (event) {
-      const normalized = this.normalizeDate(event)
+    handleDateSelected(event) {
+      const normalized = this.normalizeDate(event);
       // let dateModel = this.dateModel
 
       if (
@@ -408,7 +444,7 @@ export default defineComponent({
         ]
       ) {
         const arr = this.dateModel.dates.filter((el) => {
-          el = this.normalizeDate(el)
+          el = this.normalizeDate(el);
 
           return (
             !(
@@ -416,283 +452,283 @@ export default defineComponent({
               el?.month === normalized?.month &&
               el?.date === normalized?.date
             ) || event.all
-          )
-        })
-        this.dateModel.dates = arr
+          );
+        });
+        this.dateModel.dates = arr;
       } else {
         switch (this.inputType) {
-          case 'single':
+          case "single":
             this.dateModel = {
-              type: 'single',
-              dates: [normalized]
-            }
-            break
-          case 'range':
-            if (this.dateModel) this.dateModel.type = 'range'
+              type: "single",
+              dates: [normalized],
+            };
+            break;
+          case "range":
+            if (this.dateModel) this.dateModel.type = "range";
             if (this.dateModel?.dates?.length === 1) {
-              this.dateModel.dates.push(normalized)
+              this.dateModel.dates.push(normalized);
             } else {
-              this.dateModel.dates = [normalized]
+              this.dateModel.dates = [normalized];
             }
-            break
-          case 'multiple':
+            break;
+          case "multiple":
             if (!this.dateModel.dates) {
               this.dateModel = {
-                type: 'multiple',
-                dates: []
-              }
+                type: "multiple",
+                dates: [],
+              };
             }
-            this.dateModel?.dates && this.dateModel.dates.push(normalized)
+            this.dateModel?.dates && this.dateModel.dates.push(normalized);
         }
       }
       // this.dateModel = dateModel
-      this.calcSelected()
+      this.calcSelected();
     },
-    isHoliday (day) {
-      const thisMonth = this.thisMonth
+    isHoliday(day) {
+      const thisMonth = this.thisMonth;
 
       return (
         !!this.holidayMap?.[thisMonth.current.year]?.[
           thisMonth.current.monthSTD
         ]?.[day] ||
-        ((thisMonth.prev.LWDM + day + 1) % 7 === 0 && this.locale === 'Jalali')
-      )
+        ((thisMonth.prev.LWDM + day + 1) % 7 === 0 && this.locale === "Jalali")
+      );
     },
-    calcSelected () {
-      const dateModel = this.dateModel
+    calcSelected() {
+      const dateModel = this.dateModel;
       if (dateModel?.dates) {
-        const map = {}
+        const map = {};
         for (let i = 0; i < dateModel.dates.length; i++) {
-          const year = dateModel.dates[i].year
-          const month = dateModel.dates[i].month
-          const date = dateModel.dates[i].date
+          const year = dateModel.dates[i].year;
+          const month = dateModel.dates[i].month;
+          const date = dateModel.dates[i].date;
           if (!map[year]) {
-            map[year] = {}
+            map[year] = {};
           }
           if (!map[year]?.[month]) {
-            map[year][month] = {}
+            map[year][month] = {};
           }
           if (!map.year?.month?.date) {
-            map[year][month][date] = true
+            map[year][month][date] = true;
           }
         }
 
-        this.selectedDateMap = map
+        this.selectedDateMap = map;
       }
     },
-    calcMapEvents () {
-      const model = this.events
+    calcMapEvents() {
+      const model = this.events;
       if (model) {
-        const map = {}
+        const map = {};
         for (let i = 0; i < model.length; i++) {
-          const year = model[i].year
-          const month = model[i].month
-          const date = model[i].date
-          const count = model[i].count
-          const color = model[i].color
+          const year = model[i].year;
+          const month = model[i].month;
+          const date = model[i].date;
+          const count = model[i].count;
+          const color = model[i].color;
           if (!map[year]) {
-            map[year] = {}
+            map[year] = {};
           }
           if (!map[year]?.[month]) {
-            map[year][month] = {}
+            map[year][month] = {};
           }
           if (!map.year?.month?.date) {
-            map[year][month][date] = {}
+            map[year][month][date] = {};
           }
-          map[year][month][date] = { count, color }
+          map[year][month][date] = { count, color };
         }
-        this.eventsMap = map
+        this.eventsMap = map;
       }
     },
-    calcMapSelectable () {
-      const model = this.selectable
+    calcMapSelectable() {
+      const model = this.selectable;
       if (model) {
-        const map = {}
+        const map = {};
         for (let i = 0; i < model.dates?.length; i++) {
-          const year = model.dates?.[i].year
-          const month = model.dates?.[i].month
-          const date = model.dates?.[i].date
+          const year = model.dates?.[i].year;
+          const month = model.dates?.[i].month;
+          const date = model.dates?.[i].date;
 
           if (!map[year]) {
-            map[year] = {}
+            map[year] = {};
           }
           if (!map[year]?.[month]) {
-            map[year][month] = {}
+            map[year][month] = {};
           }
           if (!map.year?.month?.date) {
-            map[year][month][date] = true
+            map[year][month][date] = true;
           }
         }
 
-        this.isSelectableMap = map
+        this.isSelectableMap = map;
       }
     },
-    isSelectable (day) {
-      const thisMonth = this.thisMonth
-      if (this.selectable?.type === 'multiple') {
+    isSelectable(day) {
+      const thisMonth = this.thisMonth;
+      if (this.selectable?.type === "multiple") {
         return !!this.isSelectableMap?.[thisMonth.current.year]?.[
           thisMonth.current.monthSTD
-        ]?.[day]
+        ]?.[day];
       }
-      return true
+      return true;
     },
-    isEvent (day) {
-      const thisMonth = this.thisMonth
+    isEvent(day) {
+      const thisMonth = this.thisMonth;
 
       return !!this.eventsMap?.[thisMonth.current.year]?.[
         thisMonth.current.monthSTD
-      ]?.[day]
+      ]?.[day];
     },
-    isSelected (day) {
-      const thisMonth = this.thisMonth
-   
+    isSelected(day) {
+      const thisMonth = this.thisMonth;
+
       return !!this.selectedDateMap?.[thisMonth.current.year]?.[
         thisMonth.current.monthSTD
-      ]?.[day]
+      ]?.[day];
     },
 
-    isDisabled (day) {
-      const thisMonth = this.thisMonth
+    isDisabled(day) {
+      const thisMonth = this.thisMonth;
 
       return !!this.disabledMap?.[thisMonth.current.year]?.[
         thisMonth.current.monthSTD
-      ]?.[day]
+      ]?.[day];
     },
-    isInrange (day) {
+    isInrange(day) {
       if (
-        this.dateModel?.type === 'range' &&
+        this.dateModel?.type === "range" &&
         this.dateModel?.dates.length === 2
       ) {
-        const thisMonth = this.thisMonth
+        const thisMonth = this.thisMonth;
         const now = new Date(
           thisMonth.current.year,
           thisMonth.current.monthSTD,
           day
-        )
-        const f = this.normalizeDate(this.dateModel?.dates?.[0])
-        const s = this.normalizeDate(this.dateModel?.dates?.[1])
-        let fD = new Date(f.year, f.month, f.date)
-        let sD = new Date(s.year, s.month, s.date)
+        );
+        const f = this.normalizeDate(this.dateModel?.dates?.[0]);
+        const s = this.normalizeDate(this.dateModel?.dates?.[1]);
+        let fD = new Date(f.year, f.month, f.date);
+        let sD = new Date(s.year, s.month, s.date);
         if (sD < fD) {
-          const t = fD
-          fD = sD
-          sD = t
+          const t = fD;
+          fD = sD;
+          sD = t;
         }
+
         return {
           value: fD < now && now < sD,
           isFirstDay: +fD === +now,
-          isLastDay: +sD === +now
-        }
+          isLastDay: +sD === +now,
+        };
       }
 
       return {
         value: false,
         isFirstDay: false,
-        isLastDay: false
-      }
+        isLastDay: false,
+      };
     },
-    inp (event) {
-      this.inpday = parseInt(event.target.value)
+    inp(event) {
+      this.inpday = parseInt(event.target.value);
 
-      const day = this.inpday ? this.inpday : 1
-      const m = this.thisMonth.current.monthSTD
+      const day = this.inpday ? this.inpday : 1;
+      const m = this.thisMonth.current.monthSTD;
 
       this.dateselected = {
         year: this.thisMonth.current.year,
         month: m,
-        date: day
-      }
+        date: day,
+      };
 
-      return '' + this.thisMonth.current.year + '/' + m + '/' + day
+      return "" + this.thisMonth.current.year + "/" + m + "/" + day;
     },
-    handleInputtypeChange () {
-      this.dateModel = { type: this.inputType, dates: [] }
-      this.calcSelected()
+    handleInputtypeChange() {
+      this.dateModel = { type: this.inputType, dates: [] };
+      this.calcSelected();
     },
-    getEventCount (day) {
-      const thisMonth = this.thisMonth
+    getEventCount(day) {
+      const thisMonth = this.thisMonth;
       return this.eventsMap?.[thisMonth.current.year]?.[
         thisMonth.current.monthSTD
-      ]?.[day]?.count
+      ]?.[day]?.count;
     },
-    getEventColor (day) {
-      const thisMonth = this.thisMonth
+    getEventColor(day) {
+      const thisMonth = this.thisMonth;
       return this.eventsMap?.[thisMonth.current.year]?.[
         thisMonth.current.monthSTD
-      ]?.[day]?.color
+      ]?.[day]?.color;
     },
-    getPersianNumeric (day) {
-      let str = ''
-      if ((typeof str === 'string', typeof day === 'number')) {
-        const nums = this.Settings.Jalali.persianNumeric
-        str = day.toString()
+    getPersianNumeric(day) {
+      let str = "";
+      if ((typeof str === "string", typeof day === "number")) {
+        const nums = this.Settings.Jalali.persianNumeric;
+        str = day.toString();
 
         for (let i = 0; i < str.length; i++) {
-          let num = Number.parseInt(str[i])
-          num = nums[num]
-          str = str.slice(0, i) + num + str.slice(i + 1)
+          let num = Number.parseInt(str[i]);
+          num = nums[num];
+          str = str.slice(0, i) + num + str.slice(i + 1);
         }
       }
-      return str
+      return str;
     },
-    addMonth () {
+    addMonth() {
       for (let i = 1; i <= this.thisMonth.current.LD; i++) {
         if (this.isSelectable(i)) {
           this.handleDateSelected({
             year: this.month.year,
             month: this.thisMonth.current.monthSTD,
             date: i,
-            all: true
-          })
+            all: true,
+          });
         }
       }
     },
-    gotoToday () {
-      this.month = this.now
+    gotoToday() {
+      this.month = this.now;
     },
-    isForwardLimit () {
-      const limit = this.forwardLimit
-      const next = this.toolkit.nextMonth(this.month)
+    isForwardLimit() {
+      const limit = this.forwardLimit;
+      const next = this.toolkit.nextMonth(this.month);
       if (limit) {
         if (next.year > limit.year) {
-          return false
+          return false;
         }
         if (next.year === limit.year && next.month > limit.month) {
-          return false
+          return false;
         }
       }
-      return true
+      return true;
     },
-    isBackwardLimit () {
-      const limit = this.backwardLimit
-      const prev = this.toolkit.prevMonth(this.month)
+    isBackwardLimit() {
+      const limit = this.backwardLimit;
+      const prev = this.toolkit.prevMonth(this.month);
 
       if (limit) {
         if (prev.year < limit.year) {
-          return false
+          return false;
         }
         if (prev.year === limit.year && prev.month < limit.month) {
-          return false
+          return false;
         }
       }
-      return true
+      return true;
     },
-    isToday (day) {
-      
-      const now = new Date()
-      const nowJalali = this.toolkit.getJalali(now)
-     
+    isToday(day) {
+      const now = new Date();
+      const nowJalali = this.toolkit.getJalali(now);
+
       return (
-       ( nowJalali.year === this.thisMonth.current.year &&
-        nowJalali.month === this.thisMonth.current.monthSTD &&
-        nowJalali.date === day) ||
-         (now.getFullYear() === this.thisMonth.current.year &&
-        now.getMonth() +1 === this.thisMonth.current.monthSTD &&
-        now.getDate() === day)
-      )
-    }
-  }
-})
+        (nowJalali.year === this.thisMonth.current.year &&
+          nowJalali.month === this.thisMonth.current.monthSTD &&
+          nowJalali.date === day) ||
+        (now.getFullYear() === this.thisMonth.current.year &&
+          now.getMonth() + 1 === this.thisMonth.current.monthSTD &&
+          now.getDate() === day)
+      );
+    },
+  },
+});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -944,16 +980,16 @@ video {
   height: auto;
 }
 * {
-    --ttw-shadow: 0 0 transparent;
-    --ttw-ring-inset: var(--ttw-empty, );
-    --ttw-ring-offset-width: 0px;
-    --ttw-ring-offset-color: #fff;
-    --ttw-ring-color: rgba(59,130,246,0.5);
-    --ttw-ring-offset-shadow: 0 0 transparent;
-    --ttw-ring-shadow: 0 0 transparent;
+  --ttw-shadow: 0 0 transparent;
+  --ttw-ring-inset: var(--ttw-empty);
+  --ttw-ring-offset-width: 0px;
+  --ttw-ring-offset-color: #fff;
+  --ttw-ring-color: rgba(59, 130, 246, 0.5);
+  --ttw-ring-offset-shadow: 0 0 transparent;
+  --ttw-ring-shadow: 0 0 transparent;
 }
 .wraper {
-  font-family: iranyekan, "Vazir" ;
+  font-family: iranyekan, "Vazir";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -962,7 +998,6 @@ video {
   flex-direction: column;
   height: auto;
   width: auto;
-
 }
 .datepicker {
   width: 20rem;
@@ -1092,8 +1127,8 @@ video {
   outline: none;
 }
 .days-curr-pink:hover span {
-    --ttw-bg-opacity: 1;
-    background-color: rgba(249,168,212,var(--ttw-bg-opacity));
+  --ttw-bg-opacity: 1;
+  background-color: rgba(249, 168, 212, var(--ttw-bg-opacity));
 }
 .days-curr-pink:focus {
   outline: none;
@@ -1231,10 +1266,10 @@ button {
   --ttw-text-opacity: 1;
   color: rgba(245, 158, 11, var(--ttw-text-opacity));
 }
- .dp-text-pink-500 {
-                --ttw-text-opacity: 1;
-                color: rgba(236,72,153,var(--ttw-text-opacity))
-            }
+.dp-text-pink-500 {
+  --ttw-text-opacity: 1;
+  color: rgba(236, 72, 153, var(--ttw-text-opacity));
+}
 
 .dp-text-red-400 {
   --ttw-text-opacity: 1;
@@ -1279,10 +1314,10 @@ button {
   --ttw-bg-opacity: 1;
   background-color: rgba(251, 191, 36, var(--ttw-bg-opacity));
 }
-     .dp-bg-pink-400 {
-                --ttw-bg-opacity: 1;
-                background-color: rgba(244,114,182,var(--ttw-bg-opacity))
-            }
+.dp-bg-pink-400 {
+  --ttw-bg-opacity: 1;
+  background-color: rgba(244, 114, 182, var(--ttw-bg-opacity));
+}
 .dp-bg-green-400 {
   --ttw-bg-opacity: 1;
   background-color: rgba(52, 211, 153, var(--ttw-bg-opacity));
@@ -1296,19 +1331,23 @@ button {
   --ttw-bg-opacity: 0.7;
 }
 .ring-2 {
-    --ttw-ring-offset-shadow: var(--ttw-ring-inset) 0 0 0 var(--ttw-ring-offset-width) var(--ttw-ring-offset-color);
-    --ttw-ring-shadow: var(--ttw-ring-inset) 0 0 0 calc(2px + var(--ttw-ring-offset-width)) var(--ttw-ring-color);
-    box-shadow: var(--ttw-ring-offset-shadow),var(--ttw-ring-shadow),0 0 transparent;
-    box-shadow: var(--ttw-ring-offset-shadow),var(--ttw-ring-shadow),var(--ttw-shadow,0 0 transparent);
+  --ttw-ring-offset-shadow: var(--ttw-ring-inset) 0 0 0
+    var(--ttw-ring-offset-width) var(--ttw-ring-offset-color);
+  --ttw-ring-shadow: var(--ttw-ring-inset) 0 0 0
+    calc(2px + var(--ttw-ring-offset-width)) var(--ttw-ring-color);
+  box-shadow: var(--ttw-ring-offset-shadow), var(--ttw-ring-shadow),
+    0 0 transparent;
+  box-shadow: var(--ttw-ring-offset-shadow), var(--ttw-ring-shadow),
+    var(--ttw-shadow, 0 0 transparent);
 }
 .dp-ring-yellow-400 {
-    --ttw-ring-opacity: 1;
-    --ttw-ring-color: rgba(251,191,36,var(--ttw-ring-opacity));
+  --ttw-ring-opacity: 1;
+  --ttw-ring-color: rgba(251, 191, 36, var(--ttw-ring-opacity));
 }
- .dp-ring-pink-400 {
-                --ttw-ring-opacity: 1;
-                --ttw-ring-color: rgba(244,114,182,var(--ttw-ring-opacity))
-            }
+.dp-ring-pink-400 {
+  --ttw-ring-opacity: 1;
+  --ttw-ring-color: rgba(244, 114, 182, var(--ttw-ring-opacity));
+}
 .flex {
   display: flex;
 }
@@ -1416,9 +1455,10 @@ button {
   --ttw-skew-y: 0;
   --ttw-scale-x: 1;
   --ttw-scale-y: 1;
-  transform: translateX(var(--ttw-translate-x)) translateY(var(--ttw-translate-y))
-    rotate(var(--ttw-rotate)) skewX(var(--ttw-skew-x)) skewY(var(--ttw-skew-y))
-    scaleX(var(--ttw-scale-x)) scaleY(var(--ttw-scale-y));
+  transform: translateX(var(--ttw-translate-x))
+    translateY(var(--ttw-translate-y)) rotate(var(--ttw-rotate))
+    skewX(var(--ttw-skew-x)) skewY(var(--ttw-skew-y)) scaleX(var(--ttw-scale-x))
+    scaleY(var(--ttw-scale-y));
 }
 
 .dp-transition {
