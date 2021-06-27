@@ -1,5 +1,33 @@
 <template>
-  <div class="wraper" @dateselected="handleDateSelected">
+  <div class="wraper">
+    <div id="ym" class="ym" v-if="YMStage > 0">
+      <div class="ym-header">
+        <div v-if="YMStage === 1">year</div>
+        <div v-if="YMStage === 2">month</div>
+      </div>
+      <div class="ym-content" v-if="YMStage === 1">
+        <div
+          class="ym-item"
+          v-for="year in 40"
+          :yearValue="year + month.year - 20"
+          @click="handleYearSelection"
+          :key="year"
+        >
+          {{ year + month.year - 20 }}
+        </div>
+      </div>
+      <div class="ym-content ym-content-m" v-if="YMStage === 2">
+        <div
+          class="ym-item ym-item-m"
+          v-for="month in 12"
+          :value="month"
+          @click="handleMonthSelection(month)"
+          :key="month"
+        >
+          {{ Settings[lang].monthNames[month - 1] }}
+        </div>
+      </div>
+    </div>
     <div class="datepicker">
       <div
         :dir="locale === 'Jalali' ? 'rtl' : 'ltr'"
@@ -7,7 +35,12 @@
         :class="[locale === 'Jalali' ? '' : '', animationDirection]"
       >
         <button
-          class="dp-bg-white dp-rounded-md dp-text-white dp-w-6 dp-h-6 justify-center flex dp-focus:outline-none"
+          class="
+            dp-bg-white dp-rounded-md dp-text-white dp-w-6 dp-h-6
+            justify-center
+            flex
+            dp-focus:outline-none
+          "
           :v-show="isBackwardLimit()"
           :disabled="!isBackwardLimit()"
           :class="[!isBackwardLimit() ? 'dp-bg-gray-400' : theme.Bg400]"
@@ -29,11 +62,17 @@
         <transition name="fade">
           <div
             :key="changeKey"
-            class="dp-absolute dp-top-1/3 dp-left-1/2 dp--translate-x-1/2 dp-transform"
+            class="dp-absolute ym-item dp-month-tag"
+            @click="YMStage = 1"
           >
             <div class="dp-h-full dp-w-auto flex justify-center">
               <span
-                class="dp-text-norm items-center flex dp-text-gray-800 dp-text-sm dp-font-bold"
+                class="
+                  dp-text-norm
+                  items-center
+                  flex
+                  dp-text-gray-800 dp-text-sm dp-font-bold
+                "
               >
                 {{ thisMonth.current.monthName }}
                 {{
@@ -46,7 +85,12 @@
           </div>
         </transition>
         <button
-          class="dp-bg-white dp-rounded-md dp-text-white dp-w-6 dp-h-6 justify-center flex dp-focus:outline-none"
+          class="
+            dp-bg-white dp-rounded-md dp-text-white dp-w-6 dp-h-6
+            justify-center
+            flex
+            dp-focus:outline-none
+          "
           :v-show="isForwardLimit()"
           :disabled="!isForwardLimit()"
           :class="[!isForwardLimit() ? 'dp-bg-gray-400' : theme.Bg400]"
@@ -55,7 +99,13 @@
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
-            class="dp-h-full dp-w-5 dp-text-sm dp-pointer-events-none dp-focus:outline-none"
+            class="
+              dp-h-full
+              dp-w-5
+              dp-text-sm
+              dp-pointer-events-none
+              dp-focus:outline-none
+            "
             :class="{ flipH: locale === 'Jalali' }"
           >
             <path fill="none" d="M0 0h24v24H0z" />
@@ -95,7 +145,13 @@
               <button
                 v-for="day in thisMonth.current.LD"
                 :key="day + 'c'"
-                class="days dp-bt-m dp-font-medium dp-h-8 cursor-pointer group dp-relative"
+                class="
+                  days
+                  dp-bt-m dp-font-medium dp-h-8
+                  cursor-pointer
+                  group
+                  dp-relative
+                "
                 :class="[
                   isHoliday(day) ? 'dp-text-red-400' : '',
                   isDisabled(day) || !isSelectable(day)
@@ -108,7 +164,18 @@
                 @click="inp"
               >
                 <span
-                  class="flex dp-si dp-rounded items-center justify-center group-hover:dp-bg-transparent group-dp-focus:dp-bg-transparent dp-bg-opacity-70 justify-center items-center dp-w-7 dp-h-7 dp-pointer-events-none"
+                  class="
+                    flex
+                    dp-si dp-rounded
+                    items-center
+                    justify-center
+                    group-hover:dp-bg-transparent
+                    group-dp-focus:dp-bg-transparent
+                    dp-bg-opacity-70
+                    justify-center
+                    items-center
+                    dp-w-7 dp-h-7 dp-pointer-events-none
+                  "
                   :value="day"
                   :class="[
                     isSelected(day) &&
@@ -143,7 +210,22 @@
                 </span>
                 <div
                   v-if="!!isEvent(day)"
-                  class="dp-absolute flex justify-center items-center dp-font-mono dp-w-3 dp-h-3 dp-rounded-full dp-left-1/2 dp--bottom-1 text-xxs dp-text-white dp-transform -translate-x-1/2 dp-pointer-events-none"
+                  class="
+                    dp-absolute
+                    flex
+                    justify-center
+                    items-center
+                    dp-font-mono
+                    dp-w-3
+                    dp-h-3
+                    dp-rounded-full
+                    dp-left-1/2
+                    dp--bottom-1
+                    text-xxs
+                    dp-text-white dp-transform
+                    -translate-x-1/2
+                    dp-pointer-events-none
+                  "
                   :class="['dp-bg-' + getEventColor(day) + '-400']"
                 >
                   <!-- {{ getEventCount(day) }} -->
@@ -163,14 +245,34 @@
 
         <div class="flex flex-wrap dp-my-3 dp-mx-3">
           <button
-            class="dp-bg-green-400 dp-text-white dp-p-2 dp-rounded-xl dp-font-bold dp-text-sm dp-mx-1 outline-none dp-focus:outline-none"
+            class="
+              dp-bg-green-400
+              dp-text-white
+              dp-p-2
+              dp-rounded-xl
+              dp-font-bold
+              dp-text-sm
+              dp-mx-1
+              outline-none
+              dp-focus:outline-none
+            "
             @click="gotoToday"
           >
             {{ locale === "Jalali" ? "امروز" : "Today" }}
           </button>
           <button
             v-if="dateModel.type === 'multiple'"
-            class="dp-bg-red-400 dp-text-white dp-p-2 dp-rounded-xl dp-font-bold dp-text-sm dp-mx-1 outline-none dp-focus:outline-none"
+            class="
+              dp-bg-red-400
+              dp-text-white
+              dp-p-2
+              dp-rounded-xl
+              dp-font-bold
+              dp-text-sm
+              dp-mx-1
+              outline-none
+              dp-focus:outline-none
+            "
             @click="addMonth"
           >
             {{ locale === "Jalali" ? "انتخاب ماه" : "select This Month" }}
@@ -179,7 +281,13 @@
       </div>
     </div>
     <div
-      class="flex w-full dp-rounded dp-my-3 dp-bg-white dp-p-3 flex justify-around"
+      class="
+        flex
+        w-full
+        dp-rounded dp-my-3 dp-bg-white dp-p-3
+        flex
+        justify-around
+      "
       v-if="debugSelector"
     >
       <label>
@@ -230,7 +338,7 @@ export default defineComponent({
     date: { type: Object },
     lang: { type: String },
     type: { type: String },
-    debugSelector: { type: Boolean ,default:false },
+    debugSelector: { type: Boolean, default: false },
     colorTheme: { type: String },
     preSelectedModel: { type: Object },
     holidayMap: { type: Object },
@@ -272,6 +380,20 @@ export default defineComponent({
           persianNumeric: ["٠", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"],
         },
         Greg: {
+          monthNames: [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+          ],
           WD: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
           setup: [0, 1, 2, 3, 4, 5, 6],
         },
@@ -291,6 +413,8 @@ export default defineComponent({
       animationDirection: "",
       changeKey: 0.1,
       dateselected: {},
+      YMStage: 1,
+      YMInput: {},
     };
   },
   computed: {
@@ -727,6 +851,18 @@ export default defineComponent({
           now.getDate() === day)
       );
     },
+    handleYearSelection(e) {
+      this.YMInput.year = +e.target.textContent;
+      this.YMStage += 1;
+    },
+    handleMonthSelection(e) {
+      console.log(e);
+      this.YMInput.month = +e;
+      this.YMInput.date = 1;
+      this.month = this.YMInput;
+      console.log(this.YMInput);
+      this.YMStage = 0;
+    },
   },
 });
 </script>
@@ -995,9 +1131,11 @@ video {
   text-rendering: optimizeLegibility;
   background-color: transparent;
   display: flex;
+  position: relative;
   flex-direction: column;
   height: auto;
   width: auto;
+  overflow: hidden;
 }
 .datepicker {
   width: 20rem;
@@ -1631,5 +1769,78 @@ button {
   border-bottom-left-radius: 0rem;
   border-top-right-radius: 0rem;
   border-bottom-right-radius: 0rem;
+}
+
+.ym {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  background-color: #fff;
+  z-index: 2;
+}
+.ym-header {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+.ym-content {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  justify-content: center;
+}
+
+.ym-content::-webkit-scrollbar {
+  width: 0px;
+  display: none;
+}
+.ym-item {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  --tw-bg-opacity: 1;
+  background-color: rgba(0, 0, 0, var(--tw-bg-opacity));
+  --tw-bg-opacity: 0.05;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+.ym-item-m {
+  display: flex;
+  flex: 0 0 25%;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.ym-content-m {
+  display: grid;
+  height: 100vh;
+  width: 100%;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ym-item:hover {
+  --tw-bg-opacity: 0.1;
+}
+.dp-month-tag {
+  cursor: pointer;
+  transform-origin: center;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
 }
 </style>
