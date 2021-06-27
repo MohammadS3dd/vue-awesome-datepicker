@@ -41,7 +41,7 @@ export default {
 
 <template>
   <datepicker lang="Jalali" type="multiple" colorTheme="pink" v-model="date" />
-  <datepicker lang="Greg" type="range" type="multiple" colorTheme="yellow" v-model="dateGreg" />
+  <datepicker lang="Greg" type="range" colorTheme="yellow" v-model="dateGreg" />
 </template>
 
 ```
