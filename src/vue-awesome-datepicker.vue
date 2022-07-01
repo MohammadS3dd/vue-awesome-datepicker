@@ -331,7 +331,7 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import toolkit from "./toolkit.js";
 export default defineComponent({
   props: {
@@ -349,16 +349,71 @@ export default defineComponent({
     selectable: { type: Object },
   },
   setup(props, ctx) {
+    const inpday = ref(null);
+    const inputType = ref(null);
+    const animationDirection = ref('');
+    const YMStage = ref(1);
+    const changeKey = ref(0.1);
     const dmHandle = (t) => {
       ctx.emit("datemodel", t);
       ctx.emit("update:modelValue", t);
     };
-    return { dmHandle, toolkit };
+
+    const locale = computed(() => props.lang === "Jalali" ? "Jalali" : "Greg" );
+
+    const now = computed(() => {
+      if (locale.value === "Jalali") {
+        return toolkit.now();
+      } else {
+        const now = new Date();
+        return {
+          year: now.getFullYear(),
+          month: now.getMonth(),
+          date: now.getDate(),
+        };
+      }
+    })
+
+    const theme = computed(() => {
+      const defaultTheme = {
+        Bg400: "dp-bg-yellow-400",
+        Text500: "dp-text-yellow-500",
+        Ring400: "dp-ring-yellow-400",
+        DCHover: "days-curr-yellow",
+      };
+
+      let theme = defaultTheme;
+
+      if (props.colorTheme === "yellow" || props.colorTheme === "Yellow") {
+        theme = defaultTheme;
+      }
+
+      if (props.colorTheme === "pink" || props.colorTheme === "Pink") {
+        theme = {
+          Bg400: "dp-bg-pink-400",
+          Text500: "dp-text-pink-500",
+          Ring400: "dp-ring-pink-400",
+          DCHover: "days-curr-pink",
+        };
+      }
+      return theme;
+    })
+
+    return { 
+      dmHandle,
+      toolkit,
+      inpday,
+      inputType,
+      animationDirection,
+      YMStage,
+      changeKey,
+      locale,
+      now,
+      theme
+    };
   },
   data() {
     return {
-      toolkit: {},
-      inpday: null,
       Settings: {
         Jalali: {
           monthNames: [
@@ -402,59 +457,16 @@ export default defineComponent({
       prevMap: [1, 2, 3, 4, 5, 6, 0],
       nextMap: [6, 5, 4, 3, 2, 1, 0],
       month: {},
-      inputType: null,
       dateModel: {},
       selectedDateModel: {},
-
       selectedDateMap: {},
       eventsMap: {},
       isSelectableMap: {},
-      animationIn: "",
-      animationDirection: "",
-      changeKey: 0.1,
       dateselected: {},
-      YMStage: 1,
       YMInput: {},
     };
   },
   computed: {
-    theme() {
-      const defaultTheme = {
-        Bg400: "dp-bg-yellow-400",
-        Text500: "dp-text-yellow-500",
-        Ring400: "dp-ring-yellow-400",
-        DCHover: "days-curr-yellow",
-      };
-
-      let theme = defaultTheme;
-
-      if (this.colorTheme === "yellow" || this.colorTheme === "Yellow") {
-        theme = defaultTheme;
-      }
-
-      if (this.colorTheme === "pink" || this.colorTheme === "Pink") {
-        theme = {
-          Bg400: "dp-bg-pink-400",
-          Text500: "dp-text-pink-500",
-          Ring400: "dp-ring-pink-400",
-          DCHover: "days-curr-pink",
-        };
-      }
-      return theme;
-    },
-    now() {
-      if (this.locale === "Jalali") {
-        return this.toolkit.now();
-      } else {
-        const now = new Date();
-        return {
-          year: now.getFullYear(),
-          month: now.getMonth(),
-          date: now.getDate(),
-        };
-      }
-    },
-
     prevCounter() {
       return this.prevMap[
         (7 + (this.thisMonth.prev.LWDM - this.thisMonth.settings[0])) % 7
@@ -500,9 +512,6 @@ export default defineComponent({
       }
 
       return cal;
-    },
-    locale() {
-      return this.lang === "Jalali" ? "Jalali" : "Greg";
     },
   },
   watch: {
