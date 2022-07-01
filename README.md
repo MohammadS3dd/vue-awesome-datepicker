@@ -45,6 +45,33 @@ export default {
 </template>
 
 ```
+
+# Props
+## `lang`
+string ( Jalali | Greg )
+## `type`
+string ( range | multiple | single )
+## `colorTheme`
+string ( Yellow | Pink )
+## `date`
+object
+## `debugSelector`
+object
+## `preSelectedModel`
+object
+## `holidayMap`
+object
+## `disabledMap`
+object
+## `events`
+array
+## `forwardLimit`
+object
+## `backwardLimit`
+object
+## `selectable`
+object
+
 # Contribution
 ## TODO 
 
